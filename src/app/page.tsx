@@ -1,11 +1,22 @@
-import Image from "next/image";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  const tours = await prisma.tour.findMany({
+    take: 3,
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
-    <main className="min-h-screen grid place-items-center bg-gray-50">
-      <h1 className="text-3xl font-bold text-emerald-600">
-        Tailwind v4 is working ✅
-      </h1>
+    <main className="mx-auto max-w-6xl px-4 py-8">
+      <h1 className="text-2xl font-semibold mb-4">Latest Tours</h1>
+      <ul className="space-y-3">
+        {tours.map((t) => (
+          <li key={t.id} className="p-4 border rounded">
+            <div className="font-medium">{t.title}</div>
+            <div className="text-sm text-gray-600">{t.subtitle}</div>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }
