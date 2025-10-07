@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { track } from "@/lib/analytics";
 
 export default function ContactPage() {
   const sp = useSearchParams();
@@ -25,8 +26,9 @@ export default function ContactPage() {
     });
 
     if (res.ok) {
-      setOk(true);
+      track("generate_lead", { form: "contact", tourSlug: (data as any).tourSlug || null });
       form.reset();
+      setOk(true);
     } else {
       const j = await res.json().catch(() => ({}));
       setError(j?.error ? "Please check your inputs." : "Something went wrong.");
