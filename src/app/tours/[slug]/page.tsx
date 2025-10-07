@@ -2,17 +2,25 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const tour = await prisma.tour.findUnique({ where: { slug: params.slug } });
+export async function generateMetadata(
+  props: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await props.params;
+  const tour = await prisma.tour.findUnique({ where: { slug } });
   if (!tour) return {};
   return { title: tour.title, description: tour.subtitle ?? undefined };
 }
 
-export default async function TourDetailPage({ params }: { params: { slug: string } }) {
+export default async function TourDetailPage(
+  props: { params: Promise<{ slug: string }> }
+) {
+  const { slug } = await props.params;
+
   const tour = await prisma.tour.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: { itinerary: { orderBy: { day: "asc" } } },
   });
+
   if (!tour) return notFound();
 
   return (
