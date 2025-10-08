@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Script from "next/script";
 import GA from "@/components/GA";
 import { Suspense } from "react";
+import WhatsAppFloat from "@/components/WhatsAppFloat";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,6 +65,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <WhatsAppFloat />
       </body>
 
     </html>
