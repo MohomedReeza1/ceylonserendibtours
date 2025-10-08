@@ -1,22 +1,30 @@
 import { prisma } from "@/lib/prisma";
+import HeroSection from "@/components/home/HeroSection";
+import WhyUsSection from "@/components/home/WhyUsSection";
+import FeaturedTours from "@/components/home/FeaturedTours";
+import ExploreSection from "@/components/home/ExploreSection";
+import Testimonials from "@/components/home/Testimonials";
+import CtaBanner from "@/components/home/CtaBanner";
 
-export default async function Home() {
+export default async function HomePage() {
+  // Pull top 3 tours for the homepage
   const tours = await prisma.tour.findMany({
-    take: 3,
     orderBy: { createdAt: "desc" },
+    take: 3,
+    select: {
+      id: true, slug: true, title: true, subtitle: true,
+      durationDays: true, themes: true, priceFromUsd: true, gallery: true
+    }
   });
 
   return (
-    <main className="mx-auto max-w-6xl px-4 py-8">
-      <h1 className="text-2xl font-semibold mb-4">Latest Tours</h1>
-      <ul className="space-y-3">
-        {tours.map((t) => (
-          <li key={t.id} className="p-4 border rounded">
-            <div className="font-medium">{t.title}</div>
-            <div className="text-sm text-gray-600">{t.subtitle}</div>
-          </li>
-        ))}
-      </ul>
-    </main>
+    <>
+      <HeroSection />
+      <WhyUsSection />
+      <FeaturedTours tours={tours} />
+      <ExploreSection />
+      <Testimonials />
+      <CtaBanner />
+    </>
   );
 }
