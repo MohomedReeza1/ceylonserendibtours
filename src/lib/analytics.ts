@@ -1,5 +1,16 @@
-export function track(event: string, params?: Record<string, any>) {
-  if (typeof window !== "undefined" && (window as any).gtag) {
-    (window as any).gtag("event", event, params || {});
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+export type GAParams = Record<
+  string,
+  string | number | boolean | null | undefined
+>;
+
+export function track(event: string, params?: GAParams): void {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag("event", event, params ?? {});
   }
 }

@@ -4,9 +4,24 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { track } from "@/lib/analytics";
 
+type LeadFormPayload = {
+  tourSlug?: string;
+  name: string;
+  email: string;
+  phone?: string;
+  nationality?: string;
+  paxAdults: string;
+  paxChildren: string;
+  startDate?: string;
+  nights?: string;
+  budgetBand?: string;
+  message?: string;
+  source?: string;
+};
+
 export default function ContactPage() {
   const sp = useSearchParams();
-  const tourSlug = sp.get("tour") || "";
+  const tourSlugDefault = sp.get("tour") || "";
   const [loading, setLoading] = useState(false);
   const [ok, setOk] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -18,21 +33,26 @@ export default function ContactPage() {
     setError(null);
 
     const form = e.currentTarget;
-    const data = Object.fromEntries(new FormData(form));
+    const payload = Object.fromEntries(
+      new FormData(form).entries()
+    ) as unknown as LeadFormPayload;
 
     const res = await fetch("/api/lead", {
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (res.ok) {
-      track("generate_lead", { form: "contact", tourSlug: (data as any).tourSlug || null });
+      track("generate_lead", {
+        form: "contact",
+        tourSlug: payload.tourSlug || null,
+      });
       form.reset();
       setOk(true);
     } else {
-      const j = await res.json().catch(() => ({}));
-      setError(j?.error ? "Please check your inputs." : "Something went wrong.");
+      setError("Something went wrong. Please check your inputs.");
     }
+
     setLoading(false);
   }
 
@@ -52,7 +72,12 @@ export default function ContactPage() {
       )}
 
       <form onSubmit={submit} className="space-y-3">
-        <input className="border p-2 w-full" name="tourSlug" defaultValue={tourSlug} placeholder="Tour (optional)" />
+        <input
+          className="border p-2 w-full"
+          name="tourSlug"
+          defaultValue={tourSlugDefault}
+          placeholder="Tour (optional)"
+        />
         <input className="border p-2 w-full" name="name" placeholder="Full name" required />
         <input className="border p-2 w-full" type="email" name="email" placeholder="Email" required />
 

@@ -34,19 +34,24 @@ export default function RootLayout({
     <html lang="en">
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* GA4 loader (send_page_view disabled; we’ll send manually on route changes) */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="ga-init" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { send_page_view: false });
-          `}
-        </Script>
+
+        {process.env.NEXT_PUBLIC_GA_ID ? (
+        <>
+          {/* GA4 loader (send_page_view disabled; we’ll send manually on route changes) */}
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script id="ga-init" strategy="afterInteractive">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { send_page_view: false });
+            `}
+          </Script>
+        </>
+        ) : null}
 
         <GA />
         <Header />
