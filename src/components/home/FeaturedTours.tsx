@@ -17,7 +17,7 @@ export default function FeaturedTours({ tours }: { tours: TourCard[] }) {
     <section className="py-10 md:py-14 bg-neutral-50 dark:bg-neutral-900 rounded-3xl">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex items-end justify-between">
-          <h2 className="text-2xl md:text-3xl font-semibold">Featured tours</h2>
+          <h2 className="text-2xl md:text-3xl font-semibold text-white">Featured tours</h2>
           <Link href="/tours" className="text-emerald-700 hover:underline">View all</Link>
         </div>
 
