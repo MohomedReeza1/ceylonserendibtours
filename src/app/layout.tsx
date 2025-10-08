@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Script from "next/script";
 import GA from "@/components/GA";
+import { Suspense } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
   },
   description:
     "Sri Lanka tours with licensed chauffeur-guides. Customizable 7/10/14-day itineraries.",
+    openGraph: { type: "website", siteName: "Ceylon Serendib Tours" },
 };
 
 export default function RootLayout({
@@ -30,30 +32,35 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const hasGA = !!process.env.NEXT_PUBLIC_GA_ID;
+
   return (
     <html lang="en">
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
 
-        {process.env.NEXT_PUBLIC_GA_ID ? (
-        <>
-          {/* GA4 loader (send_page_view disabled; we’ll send manually on route changes) */}
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script id="ga-init" strategy="afterInteractive">
-            {`
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { send_page_view: false });
-            `}
-          </Script>
-        </>
-        ) : null}
+        {hasGA && (
+          <>
+            {/* GA4 loader (send_page_view disabled; we’ll send manually on route changes) */}
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', { send_page_view: false });
+              `}
+            </Script>
+            <Suspense fallback={null}>
+              <GA />
+            </Suspense>
+          </>
+        )}
 
-        <GA />
         <Header />
         {children}
         <Footer />
