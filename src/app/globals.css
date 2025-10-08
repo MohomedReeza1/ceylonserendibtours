@@ -1,23 +1,101 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
-:root { color-scheme: light; }
+/* ---- Design tokens (light/dark) ---- */
+:root {
+  /* base tokens you can reuse anywhere*/
+  --background: #ffffff;
+  --foreground: #171717;
+  /* color-scheme: light; */
 
+  /* brand accents (tweak to your palette) */
+  --brand-50:  #ecfdf5;
+  --brand-100: #d1fae5;
+  --brand-600: #059669;   /* buttons, links, accents */
+  --brand-700: #047857;   /* hover */
+}
+
+/* Map tokens to Tailwind v4 theme variables so you can use
+   classes like bg-background, text-foreground, text-brand-700 */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-brand-50:  var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+
+  /* Fonts (works with next/font or system fallback) */
+  /* If you load Inter/Geist in layout.tsx, set --font-sans to that var */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI,
+               Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
+/* Dark mode tokens */
+@media (prefers-color-scheme: light) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ededed;
+    --foreground: #0a0a0a;
   }
 }
 
+/* ---- Base resets / defaults ---- */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-background text-foreground antialiased;
+  font-family: var(--font-sans);
+  min-height: 100dvh;
+}
+
+/* Make media responsive by default */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Links */
+a {
+  color: var(--brand-700);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--brand-600);
+  text-decoration: underline;
+}
+
+/* Buttons & focus rings (keyboard a11y) */
+button, [type="button"], [type="submit"], [role="button"] {
+  @apply focus:outline-none;
+}
+:where(a, button, [role="button"], input, select, textarea):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--background), 0 0 0 4px var(--brand-600);
+  border-radius: 0.5rem;
+}
+
+/* Typography plugin defaults (so your About/Policies 'prose' looks great) */
+.prose {
+  --tw-prose-links: var(--brand-700);
+  --tw-prose-bullets: var(--brand-700);
+}
+
+/* ----- Brand Buttons & Links ----- */
+a {
+  @apply text-brand-700 hover:text-brand-600 transition-colors;
+}
+
+.btn-primary {
+  @apply inline-block rounded-xl bg-brand-600 text-white px-5 py-3
+         font-medium hover:bg-brand-700 transition;
+}
+
+.btn-outline {
+  @apply inline-block rounded-xl border border-brand-600 text-brand-700
+         px-5 py-3 font-medium hover:bg-brand-50 transition;
 }

@@ -41,10 +41,10 @@ export default function HeroSection() {
               transition={{ duration: 0.7, delay: 0.2 }}
               className="mt-5 flex gap-3"
             >
-              <Link href="/tours" className="px-5 py-3 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 transition">
+              <Link href="/tours" className="btn-primary">
                 Explore Tours
               </Link>
-              <Link href="/contact" className="px-5 py-3 rounded-xl bg-white/90 hover:bg-white transition">
+              <Link href="/contact" className="btn-outline bg-white/90 hover:bg-white">
                 Request a Quote
               </Link>
             </motion.div>

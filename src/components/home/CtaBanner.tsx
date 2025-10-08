@@ -9,7 +9,7 @@ export default function CtaBanner() {
             <h3 className="text-2xl font-semibold">Ready to plan your trip?</h3>
             <p className="text-white/90 mt-1">Get a personalized quote within 24 hours.</p>
           </div>
-          <Link href="/contact" className="px-5 py-3 rounded-xl bg-white text-emerald-700 hover:bg-white/90 transition">
+          <Link href="/contact" className="btn-primary bg-white text-brand-700 hover:bg-white/90">
             Request a Quote
           </Link>
         </div>
